@@ -1,0 +1,3 @@
+include ':accountcache'
+include ':app'
+rootProject.name = "accountCacher"
