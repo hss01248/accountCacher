@@ -1,8 +1,37 @@
 # account cacher
 
-测试账号加密后保存到sd卡,便于下次直接选择
+测试账号加密后保存到sd卡(.yuv/databases/包名.testaccount2.db), 便于下次直接选择,不用再记账号.
 
-会申请存储权限. 暂未适配Android api 30.
+只存储dev和test账号,不存储release账号.
+
+会申请存储权限. 暂未适配Android api 30(即Android 11)存储权限
+
+
+
+# gradle
+
+[![](https://jitpack.io/v/hss01248/accountCacher.svg)](https://jitpack.io/#hss01248/accountCacher)
+
+Add it in your root build.gradle at the end of repositories:
+
+```css
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+**Step 2.** Add the dependency
+
+```css
+	dependencies {
+	        implementation 'com.github.hss01248:accountCacher:1.0.0'
+	}
+```
+
+# api
 
 
 
