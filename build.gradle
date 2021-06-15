@@ -1,3 +1,6 @@
+
+import java.util.function.Consumer
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     apply from: 'https://raw.githubusercontent.com/hss01248/flipperUtil/master/remote2.gradle'
@@ -27,3 +30,81 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+gradle.addProjectEvaluationListener(new ProjectEvaluationListener() {
+    @Override
+    void beforeEvaluate(Project project) {
+
+    }
+
+    //https://noproxy.github.io/2019/07/01/gradle-discovery-dependencies.html
+    @Override
+    void afterEvaluate(Project project, ProjectState projectState) {
+        //println("modules------>"+project.dependencies.)
+       /* Gson gson = new GsonBuilder().serializeNulls().create();
+        println("modules------>"+gson.toJson(project.dependencies))*/
+        def configurations = project.configurations;
+        configurations.forEach(new Consumer<Configuration>() {
+            @Override
+            void accept(Configuration files) {
+               // println(files)
+
+            }
+        })
+        //println(project.configurations )
+
+
+        Configuration configuration = null;
+        try {
+            configuration = project.configurations.getByName("debugCompile");
+        }catch(Throwable throwable){
+            throwable.printStackTrace()
+        }
+
+        if(configuration == null){
+            return
+        }
+
+        /*final DependencySet dependencies = configuration.getIncoming().getDependencies();
+        final ArtifactCollection artifacts = configuration.getIncoming().getArtifacts();
+
+        final Set<? extends DependencyResult> allDependencies = configuration.getIncoming().getResolutionResult().getAllDependencies();
+
+        allDependencies.forEach(new Consumer<DependencyResult>() {
+            @Override
+            void accept(DependencyResult dependencyResult) {
+                // 这个依赖为什么被引入。可能是一个project，也可能是另一个依赖
+                final ResolvedComponentResult from = dependencyResult.getFrom();
+
+                // 这个依赖被引入的时候是怎么依赖。
+                // ModuleComponentSelector: 使用module依赖， compile "xxx:xxx:1.0"
+                // ProjectComponentSelector: 使用project方式依赖, compile project(':xx')
+                // LibraryComponentSelector：不知道了
+                final ComponentSelector requested = dependencyResult.getRequested();
+                if (requested instanceof ModuleComponentSelector) {
+                    final ModuleComponentSelector module = (ModuleComponentSelector) requested;
+                    module.getGroup();
+                    module.getModule();
+                    module.getVersion();
+                }
+                // 解析成功的依赖
+                if (dependencyResult instanceof ResolvedDependencyResult) {
+                    final ResolvedComponentResult selected = ((ResolvedDependencyResult) dependencyResult).getSelected();
+                    println(selected)
+                    // 如果是 compile "xx:xx:1.+"这种方式依赖
+                    // 这里就可以得到最终版本号
+                    selected.getModuleVersion().getVersion();
+                } else {// 解析失败的依赖
+                    final UnresolvedDependencyResult failed = (UnresolvedDependencyResult) dependencyResult;
+                    // 在哪个几个maven仓库找过
+                    final ComponentSelector attempted = failed.getAttempted();
+                    final ComponentSelectionReason attemptedReason = failed.getAttemptedReason();
+                    // 找不到的原因
+                    final Throwable failure = failed.getFailure();
+                }
+
+            }
+        })*/
+
+    }
+})

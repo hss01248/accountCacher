@@ -196,6 +196,7 @@ public class AccountCacher {
                         } else {
                             DebugAccount debugAccount = list.get(0);
                             debugAccount.usedNum = debugAccount.usedNum + 1;
+                            debugAccount.pw = pw;
                             debugAccount.updateTime = System.currentTimeMillis();
                             MyDbUtil.getDaoSession().getDebugAccountDao().update(debugAccount);
                         }

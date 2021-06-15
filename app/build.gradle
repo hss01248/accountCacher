@@ -1,3 +1,6 @@
+
+
+
 plugins {
     id 'com.android.application'
 }
@@ -38,3 +41,44 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+
+project.afterEvaluate {
+    project.android.applicationVariants.each {variant ->
+        /*project.tasks.create(name : "showAllDependencies${variant.name.capitalize()}", group : "help", description: "Print all sdk(s) infomation. author:sodino") {
+            doLast {
+                showAllDeps(project, variant)
+            }
+        }*/
+        //showAllDeps(project, variant)
+    }
+}
+
+/*
+def showAllDeps(def project, def variant) {
+    def android = project.android
+    def globalScope = android.globalScope
+    def gradle = project.gradle
+    def set = ArtifactUtils.getAllArtifacts(
+            new VariantScopeImpl(globalScope,
+                    new TransformManager(project,
+                            null,
+                            null),
+                    variant.variantData),
+            AndroidArtifacts.ConsumedConfigType.RUNTIME_CLASSPATH,
+            null,
+            BuildMappingUtils.computeBuildMapping(gradle)
+    )
+    println "${variant.name.capitalize()} all dependencies.size=${set.size()}"
+    set.eachWithIndex {artifact, idx->
+        def componentIdentifier = artifact.componentIdentifier
+        if (componentIdentifier.displayName.contains(':')) {
+            def modulerIdentifier = componentIdentifier.moduleIdentifier
+            def group = modulerIdentifier.group
+            def name = modulerIdentifier.name
+            def version = componentIdentifier.version
+            println "${idx} : ${componentIdentifier.displayName}"
+        } else {
+            println "${idx} -> ${artifact.artifactFile}"
+        }
+    }
+}*/
