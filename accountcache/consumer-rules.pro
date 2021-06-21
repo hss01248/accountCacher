@@ -10,3 +10,7 @@ public static java.lang.String TABLENAME;
 -dontwarn net.sqlcipher.database.**
 # If you do NOT use RxJava:
 -dontwarn rx.**
+-keep class net.sqlcipher.** { *; }
+-keep class rx.** { *; }
+-keep class com.facebook.flipper.** { *; }
+-keep class com.facebook.jni.** { *; }
