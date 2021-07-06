@@ -19,8 +19,8 @@ public class MyDbUtil {
      */
     private static void initGreenDao(Application context) {
        Context context2 = new MyDBContext(context);
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context2, context2.getPackageName()+"testaccount2.db");
-        Database db = helper.getEncryptedReadableDb("856yuv98");
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context2, AccountCacher.dbName+"testaccount2.db");
+        Database db = helper.getEncryptedReadableDb(AccountCacher.dbName+"856yuv98");
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
     }

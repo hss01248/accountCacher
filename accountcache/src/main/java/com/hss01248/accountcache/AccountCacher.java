@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.hjq.permissions.OnPermissionCallback;
@@ -31,15 +32,29 @@ public class AccountCacher {
     public static int TYPE_TEST = 3;
     public static int TYPE_DEV = 1;
 
-    public static void configHostType(int dev,int test,int release){
+    static boolean hasAdaptScopedStorage;
+    static String dbName = "";
+
+    public static void configHostType(int dev, int test, int release) {
         TYPE_RELEASE = release;
         TYPE_DEV = dev;
         TYPE_TEST = test;
     }
 
-     static void init(Application application) {
+    /**
+     * 非必须
+     *
+     * @param dbName                可以为空. 为空则存储于默认数据库
+     * @param hasAdaptScopedStorage 是否已经适配Android11的分区存储
+     */
+    public static void init(@Nullable String dbName, boolean hasAdaptScopedStorage) {
+        AccountCacher.dbName = dbName;
+        AccountCacher.hasAdaptScopedStorage = hasAdaptScopedStorage;
+    }
+
+    static void init(Application application) {
         app = application;
-        XXPermissions.setScopedStorage(false);
+        XXPermissions.setScopedStorage(hasAdaptScopedStorage);
     }
 
     /**
@@ -61,26 +76,30 @@ public class AccountCacher {
         }*/
 
 
+        XXPermissions permissions = XXPermissions.with(activity);
+        if (hasAdaptScopedStorage) {
+            permissions.permission(Permission.MANAGE_EXTERNAL_STORAGE);
+        } else {
+            permissions.permission(Permission.Group.STORAGE);
+        }
+        // .permission(hasAdaptScopedStorage ? Permission.Group.STORAGE : Permission.MANAGE_EXTERNAL_STORAGE)
+        //.permission(Permission.READ_EXTERNAL_STORAGE)
+        // 申请多个权限
+        // .permission(Permission.Group.CALENDAR)
+        permissions.request(new OnPermissionCallback() {
 
-        XXPermissions.with(activity)
-                .permission(Permission.Group.STORAGE)
-                //.permission(Permission.READ_EXTERNAL_STORAGE)
-                // 申请多个权限
-                // .permission(Permission.Group.CALENDAR)
-                .request(new OnPermissionCallback() {
+            @Override
+            public void onGranted(List<String> permissions, boolean all) {
+                List<DebugAccount> accounts = MyDbUtil.getAll(hostType, countryCode);
 
-                    @Override
-                    public void onGranted(List<String> permissions, boolean all) {
-                        List<DebugAccount> accounts = MyDbUtil.getAll(hostType, countryCode);
+                showSelectAccountDialog(hostType, activity, countryCode, accounts, callback);
+            }
 
-                        showSelectAccountDialog(hostType, activity, countryCode, accounts, callback);
-                    }
-
-                    @Override
-                    public void onDenied(List<String> permissions, boolean never) {
-                        Toast.makeText(activity.getApplicationContext(), "需要存储权限", Toast.LENGTH_LONG).show();
-                    }
-                });
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(activity.getApplicationContext(), "需要存储权限", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private static boolean isNotDevOrTest(int hostType) {
@@ -93,24 +112,24 @@ public class AccountCacher {
 
         DebugAccount accountLast = null;
         int idx = 0;
-        if(accounts != null && !accounts.isEmpty()){
+        if (accounts != null && !accounts.isEmpty()) {
             for (int i = 0; i < accounts.size(); i++) {
                 DebugAccount account = accounts.get(i);
-                if(accountLast == null){
+                if (accountLast == null) {
                     idx = i;
                     accountLast = account;
-                }else {
+                } else {
 
-                    if(accountLast.updateTime < account.updateTime){
+                    if (accountLast.updateTime < account.updateTime) {
                         accountLast = account;
                         idx = i;
                     }
                 }
             }
         }
-        if(idx != 0){
+        if (idx != 0) {
             accounts.remove(idx);
-            accounts.add(0,accountLast);
+            accounts.add(0, accountLast);
         }
 
         String[] strs = new String[accounts.size()];
@@ -181,8 +200,8 @@ public class AccountCacher {
 
                         List<DebugAccount> list = MyDbUtil.getDaoSession().getDebugAccountDao()
                                 .queryBuilder().where(DebugAccountDao.Properties.Account.eq(account)
-                                ,DebugAccountDao.Properties.CountryCode.eq(countryCode)
-                                ,DebugAccountDao.Properties.HostType.eq(currentHostType)).list();
+                                        , DebugAccountDao.Properties.CountryCode.eq(countryCode)
+                                        , DebugAccountDao.Properties.HostType.eq(currentHostType)).list();
                         if (list == null || list.isEmpty()) {
                             DebugAccount debugAccount = new DebugAccount();
                             debugAccount.account = account;
