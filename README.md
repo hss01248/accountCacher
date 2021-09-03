@@ -52,11 +52,14 @@ dependencies {
 
 ```groovy
 dependencies {
-	        implementation 'com.github.hss01248.accountCacher:no-op:1.1.1'
+	        releaseImplementation 'com.github.hss01248.accountCacher:no-op:1.1.1'
 	}
-configurations {
+if(gradle.taskNames.contains('Release')){
+  configurations {
      all*.exclude group: 'com.github.hss01248.accountCacher', module: 'accountcache'
 }
+}
+
 ```
 
 init(@Nullable String dbName, boolean hasAdaptScopedStorage)  name强烈建议传""
