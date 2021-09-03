@@ -26,14 +26,17 @@ import java.util.List;
 public class AccountCacher {
 
 
-    static int clickCount = 0;
     static Application app;
-    public static int TYPE_RELEASE = 0;
-    public static int TYPE_TEST = 3;
-    public static int TYPE_DEV = 1;
+     static int TYPE_RELEASE = 0;
+     static int TYPE_TEST = 3;
+     static int TYPE_DEV = 1;
 
     static boolean hasAdaptScopedStorage;
     static String dbName = "";
+    /**
+     * 是否存储正式环境账号,默认false,可以设置为true
+     */
+    public static boolean storeReleaseAccount;
 
     public static void configHostType(int dev, int test, int release) {
         TYPE_RELEASE = release;
@@ -58,7 +61,6 @@ public class AccountCacher {
     }
 
     /**
-     * 不会在正式环境弹出
      *
      * @param activity
      * @param countryCode
@@ -66,10 +68,13 @@ public class AccountCacher {
      */
     public static void selectAccount(int hostType, FragmentActivity activity, String countryCode, AccountCallback callback) {
         init(activity.getApplication());
-        if (isNotDevOrTest(hostType)) {
-            callback.onError(new Throwable("isUrlRelease"));
-            return;
+        if(!storeReleaseAccount){
+            if ( isNotDevOrTest(hostType)) {
+                callback.onError(new Throwable("isUrlRelease"));
+                return;
+            }
         }
+
         /*if (clickCount < 2) {
             clickCount++;
             return;
@@ -182,9 +187,15 @@ public class AccountCacher {
      */
     public static void saveAccount(Activity activity, int currentHostType, final String countryCode, String account, String pw) {
         init(activity.getApplication());
-        if (isNotDevOrTest(currentHostType) || TextUtils.isEmpty(account)) {
+        if(TextUtils.isEmpty(account)){
             return;
         }
+        if(!storeReleaseAccount){
+            if (isNotDevOrTest(currentHostType)) {
+                return;
+            }
+        }
+
 
 
         XXPermissions.with(activity)

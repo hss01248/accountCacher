@@ -1,10 +1,14 @@
 # account cacher
 
-测试账号加密后保存到sd卡(.yuv/databases/包名.testaccount2.db), 便于下次直接选择,不用再记账号.
+测试账号加密后保存到sd卡(.yuv/databases/名字+testaccount2.db), 便于下次直接选择,不用再记账号.
 
-只存储dev和test账号,不存储release账号.
+默认只存储dev和test账号,不存储release账号(可配置存储).
 
-会申请存储权限. 暂未适配Android api 30(即Android 11)存储权限
+提供no-op功能,便于上线.
+
+
+
+
 
 
 
@@ -23,6 +27,10 @@ Add it in your root build.gradle at the end of repositories:
 	}
 ```
 
+
+
+## 普通工程
+
 **Step 2.** Add the dependency
 
 ```css
@@ -31,23 +39,49 @@ Add it in your root build.gradle at the end of repositories:
 	}
 ```
 
+## 组件化工程
+
+```groovy
+dependencies {
+	        implementation 'com.github.hss01248:accountCacher:1.0.0'
+	}
+```
+
+
+
+
+
+
+
+
+
+
+
 # api
 
 
 
-![image-20210528093344350](/Users/hss/Library/Application Support/typora-user-images/image-20210528093344350.png)
+![image-20210903101416745](https://gitee.com/hss012489/picbed/raw/master/picgo/1630635264025-image-20210903101416745.jpg)
 
 
 
 ```java
+    AccountCacher.storeReleaseAccount = true;//配置可存储正式环境账号
+/*
+    * @param dbName                可以为空. 为空则存储于默认数据库
+     * @param hasAdaptScopedStorage 是否已经适配Android11的分区存储
+     */
+    public static void init(@Nullable String dbName, boolean hasAdaptScopedStorage) {
+
 public static void configHostType(int dev,int test,int release){
         TYPE_RELEASE = release;
         TYPE_DEV = dev;
         TYPE_TEST = test;
     }
 
+
+
 /**
-     * 不会在正式环境弹出
      *
      * @param activity
      * @param countryCode
@@ -80,3 +114,4 @@ public static void configHostType(int dev,int test,int release){
 登录成功后调用:
 
 saveAccount(Activity activity, int currentHostType, final String countryCode, String account, String pw)
+
