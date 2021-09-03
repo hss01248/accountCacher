@@ -8,10 +8,6 @@
 
 
 
-
-
-
-
 # gradle
 
 [![](https://jitpack.io/v/hss01248/accountCacher.svg)](https://jitpack.io/#hss01248/accountCacher)
@@ -35,17 +31,47 @@ Add it in your root build.gradle at the end of repositories:
 
 ```css
 	dependencies {
-	        implementation 'com.github.hss01248:accountCacher:1.0.0'
+	        debugImplementation 'com.github.hss01248.accountCacher:accountcache:1.1.1'
+          releaseImplementation 'com.github.hss01248.accountCacher:no-op:1.1.1'
 	}
 ```
 
 ## 组件化工程
 
+在你的用户/登录注册组件里:
+
 ```groovy
 dependencies {
-	        implementation 'com.github.hss01248:accountCacher:1.0.0'
+	        implementation 'com.github.hss01248.accountCacher:accountcache:1.1.1'
 	}
 ```
+
+
+
+主工程里:
+
+```groovy
+dependencies {
+	        implementation 'com.github.hss01248.accountCacher:no-op:1.1.1'
+	}
+configurations {
+     all*.exclude group: 'com.github.hss01248.accountCacher', module: 'accountcache'
+}
+```
+
+init(@Nullable String dbName, boolean hasAdaptScopedStorage)  name强烈建议传""
+
+如果已经适配存储权限,那么需要:
+
+hasAdaptScopedStorage设置为true.
+
+且manifest里设置 android:requestLegacyExternalStorage="true"
+
+且compileSdkVersion 30,targetSdkVersion 30
+
+否则,需要设置hasAdaptScopedStorage为false.
+
+
 
 
 
@@ -123,7 +149,7 @@ public class BaseApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        AccountCacher.init("",true);
+        AccountCacher.init("",true);//第二个根据你是否适配分区存储来定.
         AccountCacher.storeReleaseAccount = true;
         AccountCacher.configHostType(1,3,0);
     }
