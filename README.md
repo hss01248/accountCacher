@@ -115,3 +115,37 @@ public static void configHostType(int dev,int test,int release){
 
 saveAccount(Activity activity, int currentHostType, final String countryCode, String account, String pw)
 
+# 示例代码
+
+```java
+public class BaseApp extends MultiDexApplication {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        AccountCacher.init("",true);
+        AccountCacher.storeReleaseAccount = true;
+        AccountCacher.configHostType(1,3,0);
+    }
+}
+
+
+登录页面:
+AccountCacher.selectAccount(环境类型, this, "国家码", new AccountCallback() {
+            @Override
+            public void onSuccess(DebugAccount account) {
+                //将DebugAccount里的用户名密码 设置给登录页面的用户名,密码输入框
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                error.printStackTrace();
+            }
+        });
+
+//注册/登录成功后:
+ AccountCacher.saveAccount(this,环境类型,"国家码","用户名","明文密码");
+```
+
+
+

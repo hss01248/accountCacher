@@ -27,9 +27,9 @@ public class AccountCacher {
 
 
     static Application app;
-     static int TYPE_RELEASE = 0;
-     static int TYPE_TEST = 3;
-     static int TYPE_DEV = 1;
+   public   static int TYPE_RELEASE = 0;
+    public static int TYPE_TEST = 3;
+    public  static int TYPE_DEV = 1;
 
     static boolean hasAdaptScopedStorage;
     static String dbName = "";

@@ -16,18 +16,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AccountCacher.init("",true);
     }
 
     public void select(View view) {
-        AccountCacher.selectAccount(AccountCacher.TYPE_TEST, this, "in", new AccountCallback() {
+        AccountCacher.selectAccount(0, this, "ch", new AccountCallback() {
             @Override
             public void onSuccess(DebugAccount account) {
                 Toast.makeText(MainActivity.this,account.toString(),Toast.LENGTH_LONG).show();
                 InputDialogUtil.showDialog(MainActivity.this, account, new InPutCallback() {
                     @Override
                     public void onGet(String account, String pw) {
-                        AccountCacher.saveAccount(MainActivity.this,AccountCacher.TYPE_TEST,"in",account,pw);
+                        AccountCacher.saveAccount(MainActivity.this,0,"ch",account,pw);
                     }
                 });
             }
@@ -41,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void save(View view) {
-        AccountCacher.saveAccount(this,AccountCacher.TYPE_TEST,"in","xiaomihuawei","1234556x");
-        AccountCacher.saveAccount(this,AccountCacher.TYPE_TEST,"in","bigfish","987654321y");
-        AccountCacher.saveAccount(this,AccountCacher.TYPE_TEST,"in","19684579154","abcdefg");
+        AccountCacher.saveAccount(this,0,"ch","xiaomihuawei","1234556x");
+        AccountCacher.saveAccount(this,0,"ch","bigfish","987654321y");
+        AccountCacher.saveAccount(this,1,"ch","19684579154","abcdefg");
     }
 }

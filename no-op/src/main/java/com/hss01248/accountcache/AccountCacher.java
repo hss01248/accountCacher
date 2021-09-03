@@ -18,11 +18,15 @@ public class AccountCacher {
 
 
 
-
+    public   static int TYPE_RELEASE = 0;
+    public static int TYPE_TEST = 3;
+    public  static int TYPE_DEV = 1;
     public static boolean storeReleaseAccount;
 
     public static void configHostType(int dev, int test, int release) {
-
+        TYPE_RELEASE = release;
+        TYPE_DEV = dev;
+        TYPE_TEST = test;
     }
 
     /**
