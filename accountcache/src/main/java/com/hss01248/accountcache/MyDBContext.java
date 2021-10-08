@@ -72,4 +72,5 @@ public class MyDBContext extends ContextWrapper {
         SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
         return result;
     }
+
 }

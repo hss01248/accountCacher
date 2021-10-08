@@ -39,7 +39,8 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.3.0'
     api "com.google.code.gson:gson:2.8.5"
     implementation "net.zetetic:android-database-sqlcipher:4.4.3"
-    implementation "androidx.sqlite:sqlite:2.0.1"
+    api "androidx.sqlite:sqlite:2.0.1"
+    api 'io.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
 }
 apply plugin: 'org.greenrobot.greendao'
 greendao {
