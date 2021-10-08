@@ -27,33 +27,34 @@ public class MyDbUtil {
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         //兼容旧数据迁移情况
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                moveOldData(context);
-            }
-        }).start();
+        moveOldData(context);
 
     }
 
     private static void moveOldData(Application context) {
-        Context context2 = new MyDBContext(context);
-       File file =  context2.getDatabasePath(AccountCacher.dbName+"testaccount2.db");
+        try {
+            Context context2 = new MyDBContext(context);
+            File file =  context2.getDatabasePath(AccountCacher.dbName+"testaccount2.db");
 
-       if(file == null || !file.exists()){
-           return;
-       }
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context2, AccountCacher.dbName+"testaccount2.db");
-       //数据库加解密
-        Database db = helper.getEncryptedWritableDb(AccountCacher.dbName+"856yuv98");
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession0 = daoMaster.newSession();
-        List<DebugAccount> debugAccounts = daoSession0.getDebugAccountDao().loadAll();
-        daoSession.getDebugAccountDao().insertInTx(debugAccounts);
-        daoSession0.getDebugAccountDao().deleteAll();
-        db.close();
-        //删库跑路
-        file.delete();
+            if(file == null || !file.exists()){
+                return;
+            }
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context2, AccountCacher.dbName+"testaccount2.db");
+            //数据库加解密
+            Database db = helper.getEncryptedWritableDb(AccountCacher.dbName+"856yuv98");
+            DaoMaster daoMaster = new DaoMaster(db);
+            DaoSession daoSession0 = daoMaster.newSession();
+            List<DebugAccount> debugAccounts = daoSession0.getDebugAccountDao().loadAll();
+            daoSession.getDebugAccountDao().insertOrReplaceInTx(debugAccounts);
+            daoSession0.getDebugAccountDao().deleteAll();
+            db.close();
+            //删库跑路
+            file.delete();
+        }catch (Throwable throwable){
+            throwable.printStackTrace();
+        }
+
+
     }
 
     private static DaoSession daoSession;
