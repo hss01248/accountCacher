@@ -27,7 +27,13 @@ public class MyDbUtil {
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         //兼容旧数据迁移情况
-        moveOldData(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                moveOldData(context);
+            }
+        }).start();
+
     }
 
     private static void moveOldData(Application context) {

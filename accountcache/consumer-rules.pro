@@ -14,3 +14,4 @@ public static java.lang.String TABLENAME;
 -keep class rx.** { *; }
 -keep class com.facebook.flipper.** { *; }
 -keep class com.facebook.jni.** { *; }
+-keep @org.greenrobot.greendao.annotation.Entity class * {*;}

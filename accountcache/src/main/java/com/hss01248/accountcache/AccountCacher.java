@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.Toast;
@@ -95,9 +97,19 @@ public class AccountCacher {
 
             @Override
             public void onGranted(List<String> permissions, boolean all) {
-                List<DebugAccount> accounts = MyDbUtil.getAll(hostType, countryCode);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<DebugAccount> accounts = MyDbUtil.getAll(hostType, countryCode);
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showSelectAccountDialog(hostType, activity, countryCode, accounts, callback);
+                            }
+                        });
+                    }
+                }).start();
 
-                showSelectAccountDialog(hostType, activity, countryCode, accounts, callback);
             }
 
             @Override
@@ -207,29 +219,32 @@ public class AccountCacher {
 
                     @Override
                     public void onGranted(List<String> permissions, boolean all) {
-
-
-                        List<DebugAccount> list = MyDbUtil.getDaoSession().getDebugAccountDao()
-                                .queryBuilder().where(DebugAccountDao.Properties.Account.eq(account)
-                                        , DebugAccountDao.Properties.CountryCode.eq(countryCode)
-                                        , DebugAccountDao.Properties.HostType.eq(currentHostType)).list();
-                        if (list == null || list.isEmpty()) {
-                            DebugAccount debugAccount = new DebugAccount();
-                            debugAccount.account = account;
-                            debugAccount.pw = pw;
-                            debugAccount.updateTime = System.currentTimeMillis();
-                            debugAccount.position = 0;
-                            debugAccount.countryCode = countryCode;
-                            debugAccount.hostType = currentHostType;
-                            debugAccount.usedNum = 1;
-                            MyDbUtil.getDaoSession().getDebugAccountDao().insert(debugAccount);
-                        } else {
-                            DebugAccount debugAccount = list.get(0);
-                            debugAccount.usedNum = debugAccount.usedNum + 1;
-                            debugAccount.pw = pw;
-                            debugAccount.updateTime = System.currentTimeMillis();
-                            MyDbUtil.getDaoSession().getDebugAccountDao().update(debugAccount);
-                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<DebugAccount> list = MyDbUtil.getDaoSession().getDebugAccountDao()
+                                        .queryBuilder().where(DebugAccountDao.Properties.Account.eq(account)
+                                                , DebugAccountDao.Properties.CountryCode.eq(countryCode)
+                                                , DebugAccountDao.Properties.HostType.eq(currentHostType)).list();
+                                if (list == null || list.isEmpty()) {
+                                    DebugAccount debugAccount = new DebugAccount();
+                                    debugAccount.account = account;
+                                    debugAccount.pw = pw;
+                                    debugAccount.updateTime = System.currentTimeMillis();
+                                    debugAccount.position = 0;
+                                    debugAccount.countryCode = countryCode;
+                                    debugAccount.hostType = currentHostType;
+                                    debugAccount.usedNum = 1;
+                                    MyDbUtil.getDaoSession().getDebugAccountDao().insert(debugAccount);
+                                } else {
+                                    DebugAccount debugAccount = list.get(0);
+                                    debugAccount.usedNum = debugAccount.usedNum + 1;
+                                    debugAccount.pw = pw;
+                                    debugAccount.updateTime = System.currentTimeMillis();
+                                    MyDbUtil.getDaoSession().getDebugAccountDao().update(debugAccount);
+                                }
+                            }
+                        }).start();
                     }
 
                     @Override
