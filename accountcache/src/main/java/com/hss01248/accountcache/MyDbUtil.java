@@ -36,7 +36,7 @@ public class MyDbUtil {
             Context context2 = new MyDBContext(context);
             File file =  context2.getDatabasePath(AccountCacher.dbName+"testaccount2.db");
 
-            if(file == null || !file.exists()){
+            if(file == null || !file.exists() || file.length()==0){
                 return;
             }
             DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context2, AccountCacher.dbName+"testaccount2.db");
