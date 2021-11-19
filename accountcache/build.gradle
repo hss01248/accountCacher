@@ -38,7 +38,7 @@ dependencies {
     implementation 'com.github.getActivity:XXPermissions:11.2'
     implementation 'org.greenrobot:greendao:3.3.0'
     api "com.google.code.gson:gson:2.8.5"
-    implementation "net.zetetic:android-database-sqlcipher:4.4.3"
+   // implementation "net.zetetic:android-database-sqlcipher:4.4.3"
     api "androidx.sqlite:sqlite:2.0.1"
     api 'io.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
 }

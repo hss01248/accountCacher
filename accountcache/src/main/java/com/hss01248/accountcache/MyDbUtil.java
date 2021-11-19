@@ -27,12 +27,12 @@ public class MyDbUtil {
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         //兼容旧数据迁移情况
-        moveOldData(context);
+        //moveOldData(context);
 
     }
 
     private static void moveOldData(Application context) {
-        try {
+        /*try {
             Context context2 = new MyDBContext(context);
             File file =  context2.getDatabasePath(AccountCacher.dbName+"testaccount2.db");
 
@@ -52,7 +52,7 @@ public class MyDbUtil {
             file.delete();
         }catch (Throwable throwable){
             throwable.printStackTrace();
-        }
+        }*/
 
 
     }
