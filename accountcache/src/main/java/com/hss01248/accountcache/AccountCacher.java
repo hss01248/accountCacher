@@ -33,7 +33,7 @@ public class AccountCacher {
     public static int TYPE_TEST = 3;
     public  static int TYPE_DEV = 1;
 
-    static boolean hasAdaptScopedStorage;
+    static boolean hasAdaptScopedStorage = true;
     static String dbName = "";
     /**
      * 是否存储正式环境账号,默认false,可以设置为true
@@ -208,14 +208,13 @@ public class AccountCacher {
             }
         }
 
-
-
-        XXPermissions.with(activity)
-                .permission(Permission.Group.STORAGE)
-                //.permission(Permission.READ_EXTERNAL_STORAGE)
-                // 申请多个权限
-                // .permission(Permission.Group.CALENDAR)
-                .request(new OnPermissionCallback() {
+        XXPermissions permissions = XXPermissions.with(activity);
+        if (hasAdaptScopedStorage) {
+            permissions.permission(Permission.MANAGE_EXTERNAL_STORAGE);
+        } else {
+            permissions.permission(Permission.Group.STORAGE);
+        }
+        permissions.request(new OnPermissionCallback() {
 
                     @Override
                     public void onGranted(List<String> permissions, boolean all) {

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void save(View view) {
         AccountCacher.saveAccount(this,0,"ch","xiaomihuawei","1234556x");
-        AccountCacher.saveAccount(this,0,"ch","bigfish","987654321y");
-        AccountCacher.saveAccount(this,1,"ch","19684579154","abcdefg");
+       // AccountCacher.saveAccount(this,0,"ch","bigfish","987654321y");
+       // AccountCacher.saveAccount(this,1,"ch","19684579154","abcdefg");
     }
 }
