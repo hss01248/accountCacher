@@ -10,7 +10,7 @@
 
 ## greendao工具链
 
-
+[Android数据库操作最佳实践](https://github.com/hss01248/notebook2/blob/master/Android/Android%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.md)
 
 
 
