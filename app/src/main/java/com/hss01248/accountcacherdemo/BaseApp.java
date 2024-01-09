@@ -9,7 +9,7 @@ public class BaseApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        AccountCacher.init("",true);
+        AccountCacher.init("app1",true);
         AccountCacher.storeReleaseAccount = true;
         AccountCacher.configHostType(1,3,0);
     }

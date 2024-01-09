@@ -27,11 +27,12 @@ public class DebugAccountDao extends AbstractDao<DebugAccount, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property UpdateTime = new Property(1, long.class, "updateTime", false, "UPDATE_TIME");
         public final static Property CountryCode = new Property(2, String.class, "countryCode", false, "COUNTRY_CODE");
-        public final static Property Account = new Property(3, String.class, "account", false, "ACCOUNT");
-        public final static Property Pw = new Property(4, String.class, "pw", false, "PW");
-        public final static Property HostType = new Property(5, int.class, "hostType", false, "HOST_TYPE");
-        public final static Property UsedNum = new Property(6, int.class, "usedNum", false, "USED_NUM");
-        public final static Property Position = new Property(7, int.class, "position", false, "POSITION");
+        public final static Property AppName = new Property(3, String.class, "appName", false, "APP_NAME");
+        public final static Property Account = new Property(4, String.class, "account", false, "ACCOUNT");
+        public final static Property Pw = new Property(5, String.class, "pw", false, "PW");
+        public final static Property HostType = new Property(6, int.class, "hostType", false, "HOST_TYPE");
+        public final static Property UsedNum = new Property(7, int.class, "usedNum", false, "USED_NUM");
+        public final static Property Position = new Property(8, int.class, "position", false, "POSITION");
     }
 
 
@@ -50,11 +51,12 @@ public class DebugAccountDao extends AbstractDao<DebugAccount, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 1: updateTime
                 "\"COUNTRY_CODE\" TEXT," + // 2: countryCode
-                "\"ACCOUNT\" TEXT," + // 3: account
-                "\"PW\" TEXT," + // 4: pw
-                "\"HOST_TYPE\" INTEGER NOT NULL ," + // 5: hostType
-                "\"USED_NUM\" INTEGER NOT NULL ," + // 6: usedNum
-                "\"POSITION\" INTEGER NOT NULL );"); // 7: position
+                "\"APP_NAME\" TEXT," + // 3: appName
+                "\"ACCOUNT\" TEXT," + // 4: account
+                "\"PW\" TEXT," + // 5: pw
+                "\"HOST_TYPE\" INTEGER NOT NULL ," + // 6: hostType
+                "\"USED_NUM\" INTEGER NOT NULL ," + // 7: usedNum
+                "\"POSITION\" INTEGER NOT NULL );"); // 8: position
     }
 
     /** Drops the underlying database table. */
@@ -78,18 +80,23 @@ public class DebugAccountDao extends AbstractDao<DebugAccount, Long> {
             stmt.bindString(3, countryCode);
         }
  
+        String appName = entity.getAppName();
+        if (appName != null) {
+            stmt.bindString(4, appName);
+        }
+ 
         String account = entity.getAccount();
         if (account != null) {
-            stmt.bindString(4, account);
+            stmt.bindString(5, account);
         }
  
         String pw = entity.getPw();
         if (pw != null) {
-            stmt.bindString(5, pw);
+            stmt.bindString(6, pw);
         }
-        stmt.bindLong(6, entity.getHostType());
-        stmt.bindLong(7, entity.getUsedNum());
-        stmt.bindLong(8, entity.getPosition());
+        stmt.bindLong(7, entity.getHostType());
+        stmt.bindLong(8, entity.getUsedNum());
+        stmt.bindLong(9, entity.getPosition());
     }
 
     @Override
@@ -107,18 +114,23 @@ public class DebugAccountDao extends AbstractDao<DebugAccount, Long> {
             stmt.bindString(3, countryCode);
         }
  
+        String appName = entity.getAppName();
+        if (appName != null) {
+            stmt.bindString(4, appName);
+        }
+ 
         String account = entity.getAccount();
         if (account != null) {
-            stmt.bindString(4, account);
+            stmt.bindString(5, account);
         }
  
         String pw = entity.getPw();
         if (pw != null) {
-            stmt.bindString(5, pw);
+            stmt.bindString(6, pw);
         }
-        stmt.bindLong(6, entity.getHostType());
-        stmt.bindLong(7, entity.getUsedNum());
-        stmt.bindLong(8, entity.getPosition());
+        stmt.bindLong(7, entity.getHostType());
+        stmt.bindLong(8, entity.getUsedNum());
+        stmt.bindLong(9, entity.getPosition());
     }
 
     @Override
@@ -132,11 +144,12 @@ public class DebugAccountDao extends AbstractDao<DebugAccount, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getLong(offset + 1), // updateTime
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // countryCode
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // account
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // pw
-            cursor.getInt(offset + 5), // hostType
-            cursor.getInt(offset + 6), // usedNum
-            cursor.getInt(offset + 7) // position
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // appName
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // account
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // pw
+            cursor.getInt(offset + 6), // hostType
+            cursor.getInt(offset + 7), // usedNum
+            cursor.getInt(offset + 8) // position
         );
         return entity;
     }
@@ -146,11 +159,12 @@ public class DebugAccountDao extends AbstractDao<DebugAccount, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setUpdateTime(cursor.getLong(offset + 1));
         entity.setCountryCode(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAccount(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setPw(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setHostType(cursor.getInt(offset + 5));
-        entity.setUsedNum(cursor.getInt(offset + 6));
-        entity.setPosition(cursor.getInt(offset + 7));
+        entity.setAppName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setAccount(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setPw(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setHostType(cursor.getInt(offset + 6));
+        entity.setUsedNum(cursor.getInt(offset + 7));
+        entity.setPosition(cursor.getInt(offset + 8));
      }
     
     @Override

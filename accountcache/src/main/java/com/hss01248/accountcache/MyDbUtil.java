@@ -9,7 +9,6 @@ import com.hss01248.accountcache.db.DebugAccountDao;
 
 import org.greenrobot.greendao.database.Database;
 
-import java.io.File;
 import java.util.List;
 
 public class MyDbUtil {
@@ -21,7 +20,7 @@ public class MyDbUtil {
         //指定数据库存储路径
        Context context2 = new MyDBContext(context);
        //升级自动迁移数据的工具
-        DaoMaster.OpenHelper helper = new MySQLiteUpgradeOpenHelper(context2, AccountCacher.dbName+"testaccount3.db");
+        DaoMaster.OpenHelper helper = new MySQLiteUpgradeOpenHelper(context2, "test_account.db");
         Database db = helper.getWritableDb();
         //不再加密.以规避sqlitesipher在6.0以下版本的c层崩溃问题
         DaoMaster daoMaster = new DaoMaster(db);
@@ -66,7 +65,10 @@ public class MyDbUtil {
     }
 
      static List<DebugAccount> getAll(int hostType,String countCode){
-       return getDaoSession().getDebugAccountDao().queryBuilder().where(DebugAccountDao.Properties.HostType.eq(hostType)
+       return getDaoSession().getDebugAccountDao().queryBuilder()
+               .where(
+                       DebugAccountDao.Properties.AppName.eq(AccountCacher.appName),
+                       DebugAccountDao.Properties.HostType.eq(hostType)
                 ,DebugAccountDao.Properties.CountryCode.eq(countCode))
                 .orderDesc(DebugAccountDao.Properties.UsedNum).list();
     }

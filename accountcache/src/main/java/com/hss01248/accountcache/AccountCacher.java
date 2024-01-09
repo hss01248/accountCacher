@@ -34,7 +34,7 @@ public class AccountCacher {
     public  static int TYPE_DEV = 1;
 
     static boolean hasAdaptScopedStorage = true;
-    static String dbName = "";
+    static String appName = "";
     /**
      * 是否存储正式环境账号,默认false,可以设置为true
      */
@@ -49,11 +49,11 @@ public class AccountCacher {
     /**
      * 非必须
      *
-     * @param dbName                可以为空. 为空则存储于默认数据库
+     * @param appName                可以为空. 为空则存储于默认数据库
      * @param hasAdaptScopedStorage 是否已经适配Android11的分区存储
      */
-    public static void init(@Nullable String dbName, boolean hasAdaptScopedStorage) {
-        AccountCacher.dbName = dbName;
+    public static void init(@Nullable String appName, boolean hasAdaptScopedStorage) {
+        AccountCacher.appName = appName;
         AccountCacher.hasAdaptScopedStorage = hasAdaptScopedStorage;
     }
 
@@ -222,13 +222,16 @@ public class AccountCacher {
                             @Override
                             public void run() {
                                 List<DebugAccount> list = MyDbUtil.getDaoSession().getDebugAccountDao()
-                                        .queryBuilder().where(DebugAccountDao.Properties.Account.eq(account)
+                                        .queryBuilder().where(
+                                                DebugAccountDao.Properties.AppName.eq(AccountCacher.appName),
+                                                DebugAccountDao.Properties.Account.eq(account)
                                                 , DebugAccountDao.Properties.CountryCode.eq(countryCode)
                                                 , DebugAccountDao.Properties.HostType.eq(currentHostType)).list();
                                 if (list == null || list.isEmpty()) {
                                     DebugAccount debugAccount = new DebugAccount();
                                     debugAccount.account = account;
                                     debugAccount.pw = pw;
+                                    debugAccount.appName = AccountCacher.appName;
                                     debugAccount.updateTime = System.currentTimeMillis();
                                     debugAccount.position = 0;
                                     debugAccount.countryCode = countryCode;

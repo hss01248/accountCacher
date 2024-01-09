@@ -21,6 +21,8 @@ public class DebugAccount {
 
     public String countryCode;
 
+    public String appName;
+
     public String account;
     public String pw;
     public int hostType;
@@ -31,6 +33,7 @@ public class DebugAccount {
     public String toString() {
         return "DebugAccount{" +
                 "id=" + id +
+                ", appName=" + appName +
                 ", updateTime=" + updateTime +
                 ", countryCode='" + countryCode + '\'' +
                 ", account='" + account + '\'' +
@@ -41,18 +44,21 @@ public class DebugAccount {
                 '}';
     }
 
-    @Generated(hash = 142474538)
+    @Generated(hash = 261427384)
     public DebugAccount(Long id, long updateTime, String countryCode,
-            String account, String pw, int hostType, int usedNum, int position) {
+            String appName, String account, String pw, int hostType, int usedNum,
+            int position) {
         this.id = id;
         this.updateTime = updateTime;
         this.countryCode = countryCode;
+        this.appName = appName;
         this.account = account;
         this.pw = pw;
         this.hostType = hostType;
         this.usedNum = usedNum;
         this.position = position;
     }
+
     @Generated(hash = 65329523)
     public DebugAccount() {
     }
@@ -103,6 +109,14 @@ public class DebugAccount {
     }
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public String getAppName() {
+        return this.appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
 
