@@ -77,22 +77,12 @@ public class AccountCacher {
             }
         }
 
-        /*if (clickCount < 2) {
-            clickCount++;
-            return;
-        }*/
-
-
         XXPermissions permissions = XXPermissions.with(activity);
         if (hasAdaptScopedStorage) {
             permissions.permission(Permission.MANAGE_EXTERNAL_STORAGE);
         } else {
             permissions.permission(Permission.Group.STORAGE);
         }
-        // .permission(hasAdaptScopedStorage ? Permission.Group.STORAGE : Permission.MANAGE_EXTERNAL_STORAGE)
-        //.permission(Permission.READ_EXTERNAL_STORAGE)
-        // 申请多个权限
-        // .permission(Permission.Group.CALENDAR)
         permissions.request(new OnPermissionCallback() {
 
             @Override
@@ -114,7 +104,7 @@ public class AccountCacher {
 
             @Override
             public void onDenied(List<String> permissions, boolean never) {
-                Toast.makeText(activity.getApplicationContext(), "需要存储权限", Toast.LENGTH_LONG).show();
+                Toast.makeText(app.getApplicationContext(), "需要存储权限", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -126,6 +116,12 @@ public class AccountCacher {
 
     private static void showSelectAccountDialog(int hostType, Activity activity, String countryCode, final List<DebugAccount> accounts,
                                                 final AccountCallback callback) {
+
+        if (accounts == null || accounts.isEmpty()) {
+            // 没有历史账号，直接返回
+            callback.onSuccess(null);
+            return;
+        }
 
         DebugAccount accountLast = null;
         int idx = 0;
@@ -165,13 +161,15 @@ public class AccountCacher {
                 .setSingleChoiceItems(strs, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        callback.onSuccess(accounts.get(which));
+                        // 返回前解密密码
+                        DebugAccount account = accounts.get(which);
+                        account.pw = decrypt(account.pw);
+                        callback.onSuccess(account);
                         dialog.dismiss();
                     }
                 })
                 .setTitle("选择一个账号即可\n" + msg)
-                //.setMessage("点击切换后,自动重启app,然后即可生效")
-                //.setNegativeButton("取消",null)
+                .setNegativeButton("取消", null)
                 .create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
@@ -204,6 +202,7 @@ public class AccountCacher {
         }
         if(!storeReleaseAccount){
             if (isNotDevOrTest(currentHostType)) {
+                // release环境不保存，静默返回（saveAccount无callback）
                 return;
             }
         }
@@ -230,7 +229,7 @@ public class AccountCacher {
                                 if (list == null || list.isEmpty()) {
                                     DebugAccount debugAccount = new DebugAccount();
                                     debugAccount.account = account;
-                                    debugAccount.pw = pw;
+                                    debugAccount.pw = encrypt(pw);
                                     debugAccount.appName = AccountCacher.appName;
                                     debugAccount.updateTime = System.currentTimeMillis();
                                     debugAccount.position = 0;
@@ -241,7 +240,7 @@ public class AccountCacher {
                                 } else {
                                     DebugAccount debugAccount = list.get(0);
                                     debugAccount.usedNum = debugAccount.usedNum + 1;
-                                    debugAccount.pw = pw;
+                                    debugAccount.pw = encrypt(pw);
                                     debugAccount.updateTime = System.currentTimeMillis();
                                     MyDbUtil.getDaoSession().getDebugAccountDao().update(debugAccount);
                                 }
@@ -251,7 +250,9 @@ public class AccountCacher {
 
                     @Override
                     public void onDenied(List<String> permissions, boolean never) {
-                        Toast.makeText(activity.getApplicationContext(), "需要存储权限", Toast.LENGTH_LONG).show();
+                        if (app != null) {
+                            Toast.makeText(app.getApplicationContext(), "需要存储权限", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -269,7 +270,18 @@ public class AccountCacher {
         if (TextUtils.isEmpty(pw)) {
             return pw;
         }
-        return new String(Base64.decode(pw, 0));
+        try {
+            // 先尝试Base64解密（新数据）
+            String decrypted = new String(Base64.decode(pw, 0));
+            // 如果解密后不是空，且与原字符串长度差异合理，认为是加密数据
+            if (!TextUtils.isEmpty(decrypted) && decrypted.length() > 0) {
+                return decrypted;
+            }
+        } catch (Exception e) {
+            // 解密失败，说明是旧版本的明文数据，直接返回
+        }
+        // 兼容旧版本：之前存储的是明文，直接返回
+        return pw;
     }
 
 
