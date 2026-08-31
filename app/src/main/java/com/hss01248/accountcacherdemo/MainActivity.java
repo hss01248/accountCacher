@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         AccountCacher.selectAccount(0, this, "ch", new AccountCallback() {
             @Override
             public void onSuccess(DebugAccount account) {
-                Toast.makeText(MainActivity.this,account.toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,account+"",Toast.LENGTH_LONG).show();
                 InputDialogUtil.showDialog(MainActivity.this, account, new InPutCallback() {
                     @Override
                     public void onGet(String account, String pw) {
