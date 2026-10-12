@@ -1,23 +1,17 @@
-
-
-
 plugins {
     id 'com.android.application'
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.hss01248.accountcacherdemo"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdk 21
+        targetSdk 35
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -37,59 +31,15 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation project(path: ':accountcache')
+    implementation "androidx.multidex:multidex:2.0.1"
     //debugImplementation 'com.github.hss01248.accountCacher:accountcache:1.1.1'
     //implementation project(path: ':no-op')
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
 configurations {
    // all*.exclude group: '', module: ''
 }
-
-project.afterEvaluate {
-    project.android.applicationVariants.each {variant ->
-        /*project.tasks.create(name : "showAllDependencies${variant.name.capitalize()}", group : "help", description: "Print all sdk(s) infomation. author:sodino") {
-            doLast {
-                showAllDeps(project, variant)
-            }
-        }*/
-        //showAllDeps(project, variant)
-    }
-}
-
-/*
-def showAllDeps(def project, def variant) {
-    def android = project.android
-    def globalScope = android.globalScope
-    def gradle = project.gradle
-    def set = ArtifactUtils.getAllArtifacts(
-            new VariantScopeImpl(globalScope,
-                    new TransformManager(project,
-                            null,
-                            null),
-                    variant.variantData),
-            AndroidArtifacts.ConsumedConfigType.RUNTIME_CLASSPATH,
-            null,
-            BuildMappingUtils.computeBuildMapping(gradle)
-    )
-    println "${variant.name.capitalize()} all dependencies.size=${set.size()}"
-    set.eachWithIndex {artifact, idx->
-        def componentIdentifier = artifact.componentIdentifier
-        if (componentIdentifier.displayName.contains(':')) {
-            def modulerIdentifier = componentIdentifier.moduleIdentifier
-            def group = modulerIdentifier.group
-            def name = modulerIdentifier.name
-            def version = componentIdentifier.version
-            println "${idx} : ${componentIdentifier.displayName}"
-        } else {
-            println "${idx} -> ${artifact.artifactFile}"
-        }
-    }
-}*/

@@ -3,16 +3,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    compileSdk 35
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        minSdk 16
+        targetSdk 35
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -29,12 +24,8 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.2.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.github.getActivity:XXPermissions:11.6'
     implementation 'org.greenrobot:greendao:3.3.0'
     api "com.google.code.gson:gson:2.8.5"
@@ -51,4 +42,3 @@ greendao {
     generateTests false //设置为true以自动生成单元测试。
     targetGenDirTests 'src/main/java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java。
 }
-
